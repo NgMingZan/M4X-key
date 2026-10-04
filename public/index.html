@@ -29,7 +29,7 @@ async function verifyKey(){
   const out=document.getElementById('out');
   out.style.display='block'; out.className=''; out.textContent='Đang kiểm tra...';
   try{
-    const r=await fetch('API/verify',{method:'POST',headers:{'content-type':'application/json'},
+    const r=await fetch('/API/verify',{method:'POST',headers:{'content-type':'application/json'},
       body:JSON.stringify({key:document.getElementById('key').value.trim(),device_id:document.getElementById('device').value.trim()})});
     const j=await r.json();
     out.className=j.valid?'ok':'bad';
