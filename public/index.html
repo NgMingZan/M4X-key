@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>M4X KEY</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui;background:#090b10;color:#fff;min-height:100vh;display:grid;place-items:center}
+.card{width:min(92vw,520px);background:#11151d;border:1px solid #242b38;border-radius:22px;padding:28px;box-shadow:0 20px 70px #0008}
+h1{margin:0 0 8px;font-size:32px}.muted{color:#9ba6b7;margin:0 0 24px}
+input,button{width:100%;padding:14px 16px;border-radius:12px;font-size:16px}
+input{background:#090c12;color:#fff;border:1px solid #303848;outline:none;margin-bottom:12px}
+button{border:0;background:#fff;color:#080a0e;font-weight:800;cursor:pointer}
+#out{margin-top:16px;padding:14px;border-radius:12px;background:#090c12;display:none;word-break:break-word}
+.ok{color:#73e59b}.bad{color:#ff7d7d}code{color:#d7deea}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>M4X KEY</h1>
+<p class="muted">Kiểm tra trạng thái key kích hoạt.</p>
+<input id="key" placeholder="M4X-XXXX-XXXX-XXXX">
+<input id="device" placeholder="Device ID">
+<button onclick="verifyKey()">KIỂM TRA KEY</button>
+<div id="out"></div>
+</div>
+<script>
+async function verifyKey(){
+  const out=document.getElementById('out');
+  out.style.display='block'; out.className=''; out.textContent='Đang kiểm tra...';
+  try{
+    const r=await fetch('/api/verify',{method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({key:document.getElementById('key').value.trim(),device_id:document.getElementById('device').value.trim()})});
+    const j=await r.json();
+    out.className=j.valid?'ok':'bad';
+    out.textContent=j.valid?`Key hợp lệ • hết hạn: ${new Date(j.expires_at*1000).toLocaleString()}`:`Không hợp lệ: ${j.reason||'unknown'}`;
+  }catch(e){out.className='bad';out.textContent='Không kết nối được API.'}
+}
+</script>
+</body>
+</html>
