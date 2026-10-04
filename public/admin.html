@@ -1,262 +1,249 @@
 <!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ADMIN M4X</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ADMIN M4X</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: #080a0f;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      padding: 24px;
-    }
-
-    .wrap {
-      width: 100%;
-      max-width: 650px;
-      margin: 40px auto;
-    }
-
-    .card {
-      background: #11151d;
-      border: 1px solid #262c38;
-      border-radius: 24px;
-      padding: 28px;
-    }
-
-    h1 {
-      margin: 0 0 8px;
-      font-size: 36px;
-    }
-
-    .sub {
-      color: #9299a8;
-      margin-bottom: 25px;
-    }
-
-    label {
-      display: block;
-      margin: 18px 0 8px;
-      color: #b6bdc9;
-      font-size: 14px;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 16px;
-      border-radius: 14px;
-      border: 1px solid #343b49;
-      background: #090c11;
-      color: white;
-      font-size: 16px;
-      outline: none;
-    }
-
-    button {
-      width: 100%;
-      margin-top: 18px;
-      padding: 16px;
-      border: 0;
-      border-radius: 14px;
-      background: white;
-      color: black;
-      font-weight: 800;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      opacity: .5;
-    }
-
-    #result {
-      display: none;
-      margin-top: 22px;
-      padding: 18px;
-      border: 1px solid #343b49;
-      border-radius: 14px;
-      background: #090c11;
-    }
-
-    .key {
-      font-size: 20px;
-      font-weight: bold;
-      word-break: break-all;
-      margin: 8px 0;
-    }
-
-    .ok {
-      color: #73e29a;
-    }
-
-    .err {
-      color: #ff7676;
-    }
-
-    .copy {
-      background: #202632;
-      color: white;
-      margin-top: 12px;
-    }
-  </style>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;background:#080a0f;color:#fff;
+  font-family:Arial,sans-serif;padding:20px
+}
+.wrap{max-width:760px;margin:35px auto}
+.card{
+  background:#11151d;border:1px solid #29303d;
+  border-radius:24px;padding:25px;margin-bottom:18px
+}
+h1,h2{margin-top:0}
+.sub{color:#969dac;margin-bottom:22px}
+input,select{
+  width:100%;padding:15px;margin:7px 0;
+  border-radius:13px;border:1px solid #343c4b;
+  background:#090c11;color:#fff;font-size:16px
+}
+button{
+  border:0;border-radius:13px;padding:14px 18px;
+  font-size:15px;font-weight:bold;cursor:pointer
+}
+.primary{width:100%;margin-top:12px;background:#fff;color:#000}
+.secondary{background:#272d38;color:#fff}
+.danger{background:#3b171b;color:#ff9090}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+#panel{display:none}
+#msg{margin-top:15px}
+.ok{color:#72e49a}
+.err{color:#ff7777}
+.key{
+  padding:15px 0;border-bottom:1px solid #292f3a;
+  word-break:break-all
+}
+.meta{color:#969dac;font-size:13px;line-height:1.6}
+.keyvalue{font-weight:bold;font-size:17px;margin-bottom:5px}
+.top{
+  display:flex;justify-content:space-between;
+  align-items:center;gap:10px
+}
+</style>
 </head>
 
 <body>
-
 <div class="wrap">
-  <div class="card">
 
+  <div class="card" id="login">
     <h1>ADMIN M4X</h1>
-    <div class="sub">Tạo key kích hoạt M4X</div>
+    <div class="sub">Đăng nhập quản lý M4X KEY</div>
 
-    <label>ADMIN TOKEN</label>
-    <input
-      id="token"
-      type="password"
-      placeholder="Nhập ADMIN_TOKEN"
-      autocomplete="off"
-    >
+    <input id="username" placeholder="Tài khoản" value="M4X STORE">
+    <input id="password" type="password" placeholder="Mật khẩu">
 
-    <label>Thời hạn key</label>
-    <select id="days">
-      <option value="1">1 ngày</option>
-      <option value="7">7 ngày</option>
-      <option value="30" selected>30 ngày</option>
-      <option value="90">90 ngày</option>
-      <option value="365">365 ngày</option>
-    </select>
+    <button class="primary" onclick="login()">ĐĂNG NHẬP</button>
+    <div id="loginMsg"></div>
+  </div>
 
-    <button id="create" onclick="createKey()">
-      TẠO KEY
-    </button>
+  <div id="panel">
 
-    <div id="result"></div>
+    <div class="card">
+      <div class="top">
+        <div>
+          <h1>ADMIN M4X</h1>
+          <div class="sub">Quản lý key</div>
+        </div>
+        <button class="secondary" onclick="logout()">Thoát</button>
+      </div>
+
+      <select id="days">
+        <option value="1">1 ngày</option>
+        <option value="7">7 ngày</option>
+        <option value="30" selected>30 ngày</option>
+        <option value="90">90 ngày</option>
+        <option value="365">365 ngày</option>
+      </select>
+
+      <button class="primary" onclick="createKey()">TẠO KEY</button>
+      <div id="msg"></div>
+    </div>
+
+    <div class="card">
+      <h2>Danh sách key</h2>
+      <div id="keys">Đang tải...</div>
+    </div>
 
   </div>
 </div>
 
 <script>
-  const result = document.getElementById("result");
-  const createButton = document.getElementById("create");
+let auth = "";
 
-  async function createKey() {
-    const token = document.getElementById("token").value.trim();
-    const days = Number(document.getElementById("days").value);
+function esc(v){
+  return String(v ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
 
-    if (!token) {
-      showError("Chưa nhập ADMIN_TOKEN.");
+async function request(action, body = {}){
+  const r = await fetch("/admin",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":"Basic " + auth
+    },
+    body:JSON.stringify({action,...body})
+  });
+
+  let data;
+  try{
+    data = await r.json();
+  }catch{
+    throw new Error("Server không trả JSON.");
+  }
+
+  if(!r.ok || !data.ok)
+    throw new Error(data.error || "Có lỗi xảy ra.");
+
+  return data;
+}
+
+async function login(){
+  const u = document.getElementById("username").value;
+  const p = document.getElementById("password").value;
+
+  auth = btoa(unescape(encodeURIComponent(u + ":" + p)));
+
+  try{
+    await request("list");
+
+    document.getElementById("login").style.display="none";
+    document.getElementById("panel").style.display="block";
+
+    await loadKeys();
+  }catch(e){
+    auth="";
+    document.getElementById("loginMsg").innerHTML =
+      `<p class="err">✕ ${esc(e.message)}</p>`;
+  }
+}
+
+function logout(){
+  auth="";
+  document.getElementById("password").value="";
+  document.getElementById("panel").style.display="none";
+  document.getElementById("login").style.display="block";
+}
+
+async function createKey(){
+  const days = Number(document.getElementById("days").value);
+
+  try{
+    const d = await request("create",{days});
+
+    document.getElementById("msg").innerHTML =
+      `<p class="ok">✓ Đã tạo: <b>${esc(d.key)}</b></p>`;
+
+    await navigator.clipboard.writeText(d.key).catch(()=>{});
+    await loadKeys();
+  }catch(e){
+    document.getElementById("msg").innerHTML =
+      `<p class="err">✕ ${esc(e.message)}</p>`;
+  }
+}
+
+async function loadKeys(){
+  const box=document.getElementById("keys");
+
+  try{
+    const d=await request("list");
+
+    if(!d.keys.length){
+      box.innerHTML='<div class="meta">Chưa có key.</div>';
       return;
     }
 
-    createButton.disabled = true;
-    createButton.textContent = "ĐANG TẠO...";
+    box.innerHTML=d.keys.map(k=>`
+      <div class="key">
 
-    try {
-      const response = await fetch("/API/create-key", {
-        method: "POST",
+        <div class="keyvalue">${esc(k.key_value)}</div>
 
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer " + token
-        },
-
-        body: JSON.stringify({
-          days: days
-        })
-      });
-
-      let data;
-
-      try {
-        data = await response.json();
-      } catch {
-        throw new Error("API trả về dữ liệu không hợp lệ.");
-      }
-
-      if (!response.ok || !data.ok) {
-        throw new Error(
-          data.error ||
-          ("HTTP " + response.status)
-        );
-      }
-
-      result.style.display = "block";
-
-      result.innerHTML = `
-        <div class="ok">
-          ✓ Tạo key thành công
+        <div class="meta">
+          Device: ${esc(k.device_id || "Chưa bind")}<br>
+          Hết hạn: ${new Date(k.expires_at*1000).toLocaleString("vi-VN")}<br>
+          Trạng thái: ${k.revoked ? "Đã thu hồi" : "Hoạt động"}
         </div>
 
-        <div class="key" id="generatedKey">
-          ${escapeHtml(data.key)}
+        <div class="actions">
+          <button class="secondary"
+            onclick="copyKey('${esc(k.key_value)}')">
+            Copy
+          </button>
+
+          <button class="secondary"
+            onclick="resetDevice(${k.id})">
+            Reset Device
+          </button>
+
+          <button class="danger"
+            onclick="revokeKey(${k.id})">
+            ${k.revoked ? "Mở lại" : "Thu hồi"}
+          </button>
+
+          <button class="danger"
+            onclick="deleteKey(${k.id})">
+            Xóa
+          </button>
         </div>
 
-        <div>
-          Thời hạn: ${days} ngày
-        </div>
-
-        <div>
-          Hết hạn:
-          ${new Date(data.expires_at * 1000).toLocaleString("vi-VN")}
-        </div>
-
-        <button
-          class="copy"
-          onclick="copyKey()"
-        >
-          COPY KEY
-        </button>
-      `;
-
-    } catch (error) {
-      showError(error.message);
-    } finally {
-      createButton.disabled = false;
-      createButton.textContent = "TẠO KEY";
-    }
-  }
-
-  function showError(message) {
-    result.style.display = "block";
-
-    result.innerHTML = `
-      <div class="err">
-        ✕ ${escapeHtml(message)}
       </div>
-    `;
+    `).join("");
+
+  }catch(e){
+    box.innerHTML=`<p class="err">${esc(e.message)}</p>`;
   }
+}
 
-  async function copyKey() {
-    const element = document.getElementById("generatedKey");
+function copyKey(k){
+  navigator.clipboard.writeText(k);
+}
 
-    if (!element) {
-      return;
-    }
+async function resetDevice(id){
+  if(!confirm("Reset Device ID của key này?")) return;
+  await request("reset",{id});
+  await loadKeys();
+}
 
-    await navigator.clipboard.writeText(
-      element.textContent.trim()
-    );
+async function revokeKey(id){
+  await request("revoke",{id});
+  await loadKeys();
+}
 
-    alert("Đã copy key");
-  }
-
-  function escapeHtml(value) {
-    return String(value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
+async function deleteKey(id){
+  if(!confirm("Xóa key này vĩnh viễn?")) return;
+  await request("delete",{id});
+  await loadKeys();
+}
 </script>
-
 </body>
 </html>
